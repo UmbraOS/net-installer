@@ -19,18 +19,20 @@
  * under the License.
  */
 
-package main
+package window
 
-import (
-	"github.com/rivo/tview"
-	"github.com/umbraos/net-installer/internal/window"
-)
+import "github.com/rivo/tview"
 
-func main() {
-	app := tview.NewApplication()
-	windowManager := window.NewManager(app)
-
-	if err := app.SetRoot(windowManager.Pages(), true).EnableMouse(false).Run(); err != nil {
-		panic(err)
-	}
+type Window interface {
+	Name() Name
+	Modal() *tview.Modal
+	New(app *tview.Application, pages *tview.Pages) Window
+	Build(app *tview.Application, pages *tview.Pages) *tview.Modal
 }
+
+type Name string
+
+const (
+	HomeWindowName      = Name("home")
+	PartitionWindowName = Name("partition")
+)

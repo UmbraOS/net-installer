@@ -19,18 +19,42 @@
  * under the License.
  */
 
-package main
+package window
 
 import (
+	"fmt"
 	"github.com/rivo/tview"
-	"github.com/umbraos/net-installer/internal/window"
 )
 
-func main() {
-	app := tview.NewApplication()
-	windowManager := window.NewManager(app)
+type HomeWindow struct {
+	name  Name
+	modal *tview.Modal
+}
 
-	if err := app.SetRoot(windowManager.Pages(), true).EnableMouse(false).Run(); err != nil {
-		panic(err)
+func (w HomeWindow) Name() Name {
+	return w.name
+}
+
+func (w HomeWindow) Modal() *tview.Modal {
+	return w.modal
+}
+
+func (w HomeWindow) New(app *tview.Application, pages *tview.Pages) Window {
+	return HomeWindow{
+		name:  HomeWindowName,
+		modal: w.Build(app, pages),
 	}
+}
+
+func (w HomeWindow) Build(app *tview.Application, pages *tview.Pages) *tview.Modal {
+	return tview.NewModal().
+		SetText(fmt.Sprintf("Welcome to UmbraOS net installer!")).
+		AddButtons([]string{"Start", "Cancel"}).
+		SetDoneFunc(func(_ int, label string) {
+			if label == "Start" {
+				pages.SwitchToPage(string(PartitionWindowName))
+			} else {
+				app.Stop()
+			}
+		})
 }

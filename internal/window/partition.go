@@ -19,18 +19,35 @@
  * under the License.
  */
 
-package main
+package window
 
 import (
+	"fmt"
 	"github.com/rivo/tview"
-	"github.com/umbraos/net-installer/internal/window"
 )
 
-func main() {
-	app := tview.NewApplication()
-	windowManager := window.NewManager(app)
+type PartitionWindow struct {
+	name  Name
+	modal *tview.Modal
+}
 
-	if err := app.SetRoot(windowManager.Pages(), true).EnableMouse(false).Run(); err != nil {
-		panic(err)
+func (w PartitionWindow) Name() Name {
+	return w.name
+}
+
+func (w PartitionWindow) Modal() *tview.Modal {
+	return w.modal
+}
+
+func (w PartitionWindow) New(app *tview.Application, pages *tview.Pages) Window {
+	return PartitionWindow{
+		name:  PartitionWindowName,
+		modal: w.Build(app, pages),
 	}
+}
+
+func (w PartitionWindow) Build(_ *tview.Application, _ *tview.Pages) *tview.Modal {
+	return tview.NewModal().
+		SetText(fmt.Sprintf("Select a partitioning method")).
+		AddButtons([]string{"Automatic", "Manual"})
 }
