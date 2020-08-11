@@ -23,11 +23,11 @@ package window
 
 import "github.com/rivo/tview"
 
-type CoreWindow struct {
+type Manager struct {
 	pages *tview.Pages
 }
 
-func NewManager(app *tview.Application) *CoreWindow {
+func NewManager(app *tview.Application) *Manager {
 	pages := tview.NewPages()
 	windows := []Window{
 		HomeWindow{}.New(app, pages),
@@ -40,11 +40,11 @@ func NewManager(app *tview.Application) *CoreWindow {
 		pages.AddPage(string(w.Name()), w.Primitive(), true, i == 0)
 	}
 
-	return &CoreWindow{
+	return &Manager{
 		pages,
 	}
 }
 
-func (w *CoreWindow) Pages() *tview.Pages {
+func (w *Manager) Pages() *tview.Pages {
 	return w.pages
 }
