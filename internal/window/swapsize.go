@@ -56,7 +56,7 @@ func (w SwapSizeWindow) Build(_ *tview.Application, _ *tview.Pages) tview.Primit
 		SetAcceptanceFunc(tview.InputFieldInteger).
 		SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEnter {
-				exec.Command("sh", "/umbra/scripts/auto-install-swap.sh", field.GetText())
+				_ = exec.Command("sh", "/umbra/scripts/auto-install-swap.sh", field.GetText()).Start()
 			}
 		})
 }

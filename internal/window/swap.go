@@ -54,7 +54,7 @@ func (w SwapWindow) Build(_ *tview.Application, pages *tview.Pages) tview.Primit
 			if label == "Yes" {
 				pages.SwitchToPage(string(SwapSizeWindowName))
 			} else {
-				exec.Command("sh", "/umbra/scripts/auto-install.sh")
+				_ = exec.Command("sh", "/umbra/scripts/auto-install.sh").Start()
 			}
 		})
 }
