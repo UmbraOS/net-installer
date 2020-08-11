@@ -23,37 +23,38 @@ package window
 
 import (
 	"github.com/rivo/tview"
+	"os/exec"
 )
 
-type HomeWindow struct {
-	name  Name
-	modal *tview.Modal
+type SwapWindow struct {
+	name Name
+	form *tview.Modal
 }
 
-func (w HomeWindow) Name() Name {
+func (w SwapWindow) Name() Name {
 	return w.name
 }
 
-func (w HomeWindow) Primitive() tview.Primitive {
-	return w.modal
+func (w SwapWindow) Primitive() tview.Primitive {
+	return w.form
 }
 
-func (w HomeWindow) New(app *tview.Application, pages *tview.Pages) Window {
-	return HomeWindow{
-		name:  HomeWindowName,
-		modal: w.Build(app, pages).(*tview.Modal),
+func (w SwapWindow) New(app *tview.Application, pages *tview.Pages) Window {
+	return SwapWindow{
+		name: SwapWindowName,
+		form: w.Build(app, pages).(*tview.Modal),
 	}
 }
 
-func (w HomeWindow) Build(app *tview.Application, pages *tview.Pages) tview.Primitive {
+func (w SwapWindow) Build(_ *tview.Application, pages *tview.Pages) tview.Primitive {
 	return tview.NewModal().
-		SetText("Welcome to UmbraOS net installer!").
-		AddButtons([]string{"Start", "Cancel"}).
+		SetText("Do you want a swap partition?").
+		AddButtons([]string{"Yes", "No"}).
 		SetDoneFunc(func(_ int, label string) {
-			if label == "Start" {
-				pages.SwitchToPage(string(PartitionWindowName))
+			if label == "Yes" {
+				pages.SwitchToPage(string(SwapSizeWindowName))
 			} else {
-				app.Stop()
+				exec.Command("sh", "/umbra/scripts/auto-install.sh")
 			}
 		})
 }

@@ -32,10 +32,12 @@ func NewManager(app *tview.Application) *CoreWindow {
 	windows := []Window{
 		HomeWindow{}.New(app, pages),
 		PartitionWindow{}.New(app, pages),
+		SwapWindow{}.New(app, pages),
+		SwapSizeWindow{}.New(app, pages),
 	}
 
 	for i, w := range windows {
-		pages.AddPage(string(w.Name()), w.Modal(), false, i == 0)
+		pages.AddPage(string(w.Name()), w.Primitive(), true, i == 0)
 	}
 
 	return &CoreWindow{

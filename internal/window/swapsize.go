@@ -22,38 +22,41 @@
 package window
 
 import (
+	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
+	"os/exec"
 )
 
-type HomeWindow struct {
-	name  Name
-	modal *tview.Modal
+type SwapSizeWindow struct {
+	name Name
+	form *tview.InputField
 }
 
-func (w HomeWindow) Name() Name {
+func (w SwapSizeWindow) Name() Name {
 	return w.name
 }
 
-func (w HomeWindow) Primitive() tview.Primitive {
-	return w.modal
+func (w SwapSizeWindow) Primitive() tview.Primitive {
+	return w.form
 }
 
-func (w HomeWindow) New(app *tview.Application, pages *tview.Pages) Window {
-	return HomeWindow{
-		name:  HomeWindowName,
-		modal: w.Build(app, pages).(*tview.Modal),
+func (w SwapSizeWindow) New(app *tview.Application, pages *tview.Pages) Window {
+	return SwapSizeWindow{
+		name: SwapWindowName,
+		form: w.Build(app, pages).(*tview.InputField),
 	}
 }
 
-func (w HomeWindow) Build(app *tview.Application, pages *tview.Pages) tview.Primitive {
-	return tview.NewModal().
-		SetText("Welcome to UmbraOS net installer!").
-		AddButtons([]string{"Start", "Cancel"}).
-		SetDoneFunc(func(_ int, label string) {
-			if label == "Start" {
-				pages.SwitchToPage(string(PartitionWindowName))
-			} else {
-				app.Stop()
+func (w SwapSizeWindow) Build(_ *tview.Application, _ *tview.Pages) tview.Primitive {
+	field := tview.NewInputField()
+
+	return field.SetLabel("Enter the size in MiB: ").
+		SetPlaceholder("E.g. 2048").
+		SetFieldWidth(9).
+		SetAcceptanceFunc(tview.InputFieldInteger).
+		SetDoneFunc(func(key tcell.Key) {
+			if key == tcell.KeyEnter {
+				exec.Command("sh", "/umbra/scripts/auto-install-swap.sh", field.GetText())
 			}
 		})
 }

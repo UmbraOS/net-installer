@@ -25,9 +25,9 @@ import "github.com/rivo/tview"
 
 type Window interface {
 	Name() Name
-	Modal() *tview.Modal
+	Primitive() tview.Primitive
 	New(app *tview.Application, pages *tview.Pages) Window
-	Build(app *tview.Application, pages *tview.Pages) *tview.Modal
+	Build(app *tview.Application, pages *tview.Pages) tview.Primitive
 }
 
 type Name string
@@ -35,4 +35,6 @@ type Name string
 const (
 	HomeWindowName      = Name("home")
 	PartitionWindowName = Name("partition")
+	SwapWindowName      = Name("swap")
+	SwapSizeWindowName  = Name("swap-size")
 )

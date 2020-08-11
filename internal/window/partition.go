@@ -22,7 +22,6 @@
 package window
 
 import (
-	"fmt"
 	"github.com/rivo/tview"
 )
 
@@ -35,19 +34,24 @@ func (w PartitionWindow) Name() Name {
 	return w.name
 }
 
-func (w PartitionWindow) Modal() *tview.Modal {
+func (w PartitionWindow) Primitive() tview.Primitive {
 	return w.modal
 }
 
 func (w PartitionWindow) New(app *tview.Application, pages *tview.Pages) Window {
 	return PartitionWindow{
 		name:  PartitionWindowName,
-		modal: w.Build(app, pages),
+		modal: w.Build(app, pages).(*tview.Modal),
 	}
 }
 
-func (w PartitionWindow) Build(_ *tview.Application, _ *tview.Pages) *tview.Modal {
+func (w PartitionWindow) Build(_ *tview.Application, pages *tview.Pages) tview.Primitive {
 	return tview.NewModal().
-		SetText(fmt.Sprintf("Select a partitioning method")).
-		AddButtons([]string{"Automatic", "Manual"})
+		SetText("Select a type of installation").
+		AddButtons([]string{"Automatic (for VMs)", "Manual"}).
+		SetDoneFunc(func(_ int, label string) {
+			if label == "Automatic (for VMs)" {
+				pages.SwitchToPage(string(SwapWindowName))
+			}
+		})
 }
