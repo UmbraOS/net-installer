@@ -42,7 +42,7 @@ func (w SwapSizeWindow) Primitive() tview.Primitive {
 
 func (w SwapSizeWindow) New(app *tview.Application, pages *tview.Pages) Window {
 	return SwapSizeWindow{
-		name: SwapWindowName,
+		name: SwapSizeWindowName,
 		form: w.Build(app, pages).(*tview.InputField),
 	}
 }
