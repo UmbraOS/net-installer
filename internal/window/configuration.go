@@ -57,10 +57,14 @@ func (w ConfigurationWindow) Build(app *tview.Application, _ *tview.Pages) tview
 		AddInputField("Time zone (Zone/City)", "e.g. Europe/Lisbon", 18, nil, nil).
 		AddButton("Save", func() {
 			args := []string{"/umbra/scripts/setup-config.sh"}
+			nItem := 3
 
-			for i := 0; i < 3; i++ {
-				args = append(args, form.GetFormItem(i).(*tview.InputField).GetText())
+			for i := 0; i < nItem - 1; i++ {
+				_, value := form.GetFormItem(i).(*tview.DropDown).GetCurrentOption()
+				args = append(args, value)
 			}
+
+			args = append(args, form.GetFormItem(nItem - 1).(*tview.InputField).GetText())
 
 			_ = exec.Command("sh", args...).Start()
 			app.Stop()
