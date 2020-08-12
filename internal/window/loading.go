@@ -21,21 +21,30 @@
 
 package window
 
-import "github.com/rivo/tview"
+import (
+	"github.com/rivo/tview"
+)
 
-type Window interface {
-	Name() Name
-	Primitive() tview.Primitive
-	New(app *tview.Application, pages *tview.Pages) Window
-	Build(app *tview.Application, pages *tview.Pages) tview.Primitive
+type LoadingWindow struct {
+	name  Name
+	modal *tview.Modal
 }
 
-type Name string
+func (w LoadingWindow) Name() Name {
+	return w.name
+}
 
-const (
-	HomeWindowName      = Name("home")
-	PartitionWindowName = Name("partition")
-	SwapWindowName      = Name("swap")
-	SwapSizeWindowName  = Name("swap-size")
-	LoadingWindowName   = Name("loading")
-)
+func (w LoadingWindow) Primitive() tview.Primitive {
+	return w.modal
+}
+
+func (w LoadingWindow) New(app *tview.Application, pages *tview.Pages) Window {
+	return LoadingWindow{
+		name:  LoadingWindowName,
+		modal: w.Build(app, pages).(*tview.Modal),
+	}
+}
+
+func (w LoadingWindow) Build(_ *tview.Application, _ *tview.Pages) tview.Primitive {
+	return tview.NewModal().SetText("Please wait...")
+}

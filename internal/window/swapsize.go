@@ -47,7 +47,7 @@ func (w SwapSizeWindow) New(app *tview.Application, pages *tview.Pages) Window {
 	}
 }
 
-func (w SwapSizeWindow) Build(_ *tview.Application, _ *tview.Pages) tview.Primitive {
+func (w SwapSizeWindow) Build(app *tview.Application, pages *tview.Pages) tview.Primitive {
 	field := tview.NewInputField()
 
 	return field.SetLabel("Enter the size in MiB: ").
@@ -56,7 +56,14 @@ func (w SwapSizeWindow) Build(_ *tview.Application, _ *tview.Pages) tview.Primit
 		SetAcceptanceFunc(tview.InputFieldInteger).
 		SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEnter {
-				_ = exec.Command("sh", "/umbra/scripts/auto-install-swap.sh", field.GetText()).Start()
+				pages.SwitchToPage(string(LoadingWindowName))
+				cmd := exec.Command("sh", "/umbra/scripts/auto-install-swap.sh", field.GetText())
+
+				go func() {
+					defer app.Stop()
+					_ = cmd.Start()
+					_ = cmd.Wait()
+				}()
 			}
 		})
 }

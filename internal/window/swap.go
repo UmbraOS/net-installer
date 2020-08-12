@@ -46,7 +46,7 @@ func (w SwapWindow) New(app *tview.Application, pages *tview.Pages) Window {
 	}
 }
 
-func (w SwapWindow) Build(_ *tview.Application, pages *tview.Pages) tview.Primitive {
+func (w SwapWindow) Build(app *tview.Application, pages *tview.Pages) tview.Primitive {
 	return tview.NewModal().
 		SetText("Do you want a swap partition?").
 		AddButtons([]string{"Yes", "No"}).
@@ -54,7 +54,14 @@ func (w SwapWindow) Build(_ *tview.Application, pages *tview.Pages) tview.Primit
 			if label == "Yes" {
 				pages.SwitchToPage(string(SwapSizeWindowName))
 			} else {
-				_ = exec.Command("sh", "/umbra/scripts/auto-install.sh").Start()
+				pages.SwitchToPage(string(LoadingWindowName))
+				cmd := exec.Command("sh", "/umbra/scripts/auto-install.sh")
+
+				go func() {
+					defer app.Stop()
+					_ = cmd.Start()
+					_ = cmd.Wait()
+				}()
 			}
 		})
 }

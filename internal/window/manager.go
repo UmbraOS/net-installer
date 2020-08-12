@@ -34,6 +34,7 @@ func NewManager(app *tview.Application) *Manager {
 		PartitionWindow{}.New(app, pages),
 		SwapWindow{}.New(app, pages),
 		SwapSizeWindow{}.New(app, pages),
+		LoadingWindow{}.New(app, pages),
 	}
 
 	for i, w := range windows {
