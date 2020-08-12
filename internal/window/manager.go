@@ -35,6 +35,7 @@ func NewManager(app *tview.Application) *Manager {
 		SwapWindow{}.New(app, pages),
 		SwapSizeWindow{}.New(app, pages),
 		LoadingWindow{}.New(app, pages),
+		ConfigurationWindow{}.New(app, pages),
 	}
 
 	for i, w := range windows {

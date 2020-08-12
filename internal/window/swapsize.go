@@ -60,9 +60,11 @@ func (w SwapSizeWindow) Build(app *tview.Application, pages *tview.Pages) tview.
 				cmd := exec.Command("sh", "/umbra/scripts/auto-install-swap.sh", field.GetText())
 
 				go func() {
-					defer app.Stop()
 					_ = cmd.Start()
 					_ = cmd.Wait()
+
+					pages.SwitchToPage(string(ConfigurationWindowName))
+					app.Draw()
 				}()
 			}
 		})

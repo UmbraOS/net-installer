@@ -19,24 +19,8 @@
  * under the License.
  */
 
-package window
+package configuration
 
-import "github.com/rivo/tview"
-
-type Window interface {
-	Name() Name
-	Primitive() tview.Primitive
-	New(app *tview.Application, pages *tview.Pages) Window
-	Build(app *tview.Application, pages *tview.Pages) tview.Primitive
+func GetLanguages() []string {
+	return PullScriptOutput("get-languages")
 }
-
-type Name string
-
-const (
-	HomeWindowName          = Name("home")
-	PartitionWindowName     = Name("partition")
-	SwapWindowName          = Name("swap")
-	SwapSizeWindowName      = Name("swap-size")
-	LoadingWindowName       = Name("loading")
-	ConfigurationWindowName = Name("language")
-)

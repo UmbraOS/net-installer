@@ -19,24 +19,15 @@
  * under the License.
  */
 
-package window
+package configuration
 
-import "github.com/rivo/tview"
-
-type Window interface {
-	Name() Name
-	Primitive() tview.Primitive
-	New(app *tview.Application, pages *tview.Pages) Window
-	Build(app *tview.Application, pages *tview.Pages) tview.Primitive
-}
-
-type Name string
-
-const (
-	HomeWindowName          = Name("home")
-	PartitionWindowName     = Name("partition")
-	SwapWindowName          = Name("swap")
-	SwapSizeWindowName      = Name("swap-size")
-	LoadingWindowName       = Name("loading")
-	ConfigurationWindowName = Name("language")
+import (
+	"fmt"
+	"os/exec"
+	"strings"
 )
+
+func PullScriptOutput(name string) []string {
+	out, _ := exec.Command("sh", fmt.Sprintf("/umbra/scripts/%s.sh", name)).Output()
+	return strings.Split(string(out), "\n")
+}

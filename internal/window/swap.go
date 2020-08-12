@@ -58,9 +58,11 @@ func (w SwapWindow) Build(app *tview.Application, pages *tview.Pages) tview.Prim
 				cmd := exec.Command("sh", "/umbra/scripts/auto-install.sh")
 
 				go func() {
-					defer app.Stop()
 					_ = cmd.Start()
 					_ = cmd.Wait()
+
+					pages.SwitchToPage(string(ConfigurationWindowName))
+					app.Draw()
 				}()
 			}
 		})
